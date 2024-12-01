@@ -11,15 +11,18 @@ import (
 func main() {
 	leftList, rightList := readInput("input.txt")
 
-	leftList = bubbleSort(leftList)
-	rightList = bubbleSort(rightList)
+	leftListSorted := bubbleSort(leftList)
+	rightListSorted := bubbleSort(rightList)
 
 	distance := 0
-	for i := 0; i < len(leftList); i++ {
-		distance += abs(leftList[i] - rightList[i])
+	for i := 0; i < len(leftListSorted); i++ {
+		distance += abs(leftListSorted[i] - rightListSorted[i])
 	}
 
 	fmt.Println("The total distance between the lists is:", distance)
+
+	similarityScore := calculateSimilarityScore(leftList, rightList)
+	fmt.Println("The similarity score between the lists is:", similarityScore)
 }
 
 func readInput(filename string) ([]int, []int) {
@@ -68,4 +71,18 @@ func abs(x int) int {
 		return -x
 	}
 	return x
+}
+
+func calculateSimilarityScore(leftList, rightList []int) int {
+	rightCount := make(map[int]int)
+	for _, num := range rightList {
+		rightCount[num]++
+	}
+
+	similarityScore := 0
+	for _, num := range leftList {
+		similarityScore += num * rightCount[num]
+	}
+
+	return similarityScore
 }
